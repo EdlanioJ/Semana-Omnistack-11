@@ -1,93 +1,62 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Link, useHistory } from 'react-router-dom';
+import { GlobalContext } from '../../context/globalContext';
 
-import api from '../../services/api';
-import './styles.css';
+import Button from '../../components/Button';
+import Link from '../../components/Link';
+import Input from '../../components/Input';
+import {Container, Content, Section, Title, Text, Form, InputGroup} from './styles';
 
 import logoImg from '../../assets/logo.svg';
 
 export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [city, setCity] = useState('');
-  const [uf, setUf] = useState('');
-
-  const history = useHistory();
-
-  async function handleRegister(e) {
-    e.preventDefault();
-
-    const data = {
-      name,
-      email,
-      whatsapp,
-      city,
-      uf
-    }
-
-    try {
-      const response = await api.post('ongs', data);
-
-      alert(`Seu ID de acesso: ${response.data.id}`);
-
-      history.push('/');
-    }catch(err) {
-      alert(err);
-    }
-    
-  }
+  const {handleRegister} = useContext(GlobalContext);
 
   return (
-    <div className="register-container">
-      <div className="content">
-        <section>
+    <Container>
+      <Content>
+        <Section>
           <img src={logoImg} alt="Be The hero" />
 
-          <h1>Cadastro</h1>
-          <p>Faça seu cadastro, entre na plataforma e ajude pessoas a encontrarem os casos da sua ONG.</p>
+          <Title>Cadastro</Title>
+          <Text>Faça seu cadastro, entre na plataforma e ajude pessoas a encontrarem os casos da sua ONG.</Text>
 
-          <Link to='/' className='back-link'>
+          <Link to='/' >
 						<FiArrowLeft size={16} color='E02041' />
 						Já tenho cadastro
 					</Link>
-        </section>
-        <form onSubmit={handleRegister}>
-          <input 
+        </Section>
+        <Form onSubmit={handleRegister}>
+          <Input 
             placeholder="Nome da ONG" 
-            value={name} 
-            onChange={ e => setName(e.target.value)}
+            name="name"
           />
-          <input 
+          <Input 
             type="email" 
             placeholder="E-mail" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)}
+            name="email"
           />
-          <input 
+          <Input 
+            type="tel"
             placeholder="Whatsapp"
-            value={whatsapp} 
-            onChange={ e => setWhatsapp(e.target.value)}
+            name="whatsapp"
           />
 
-          <div className="input-group">
-            <input 
+          <InputGroup>
+            <Input 
               placeholder="Cidade"
-              value={city} 
-              onChange={ e => setCity(e.target.value)}
+              name="city"
             />
-            <input 
+            <Input 
               placeholder="UF" 
               style={{ width: 80 }}
-              value={uf} 
-              onChange={ e => setUf(e.target.value)}
+              name="uf"
             />
 
-          </div>
-          <button type="submit" className="button">Cadastrar</button>
-        </form>
-      </div>
-    </div>
+          </InputGroup>
+          <Button type="submit">Cadastrar</Button>
+        </Form>
+      </Content>
+    </Container>
   );
 }

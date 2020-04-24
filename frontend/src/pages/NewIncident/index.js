@@ -1,75 +1,50 @@
-import React, {useState} from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, {useContext} from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
 
-import './styles.css';
+import Button from '../../components/Button';
+import Link from '../../components/Link';
+import Input from '../../components/Input';
+import TextArea from '../../components/TextArea';
+import { Container, Content, Section, Title, Text, Form } from './styles';
 
-import api from '../../services/api';
+import { GlobalContext } from '../../context/globalContext';
 
 import logoImg from '../../assets/logo.svg';
 
 export default function NewIncident() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [value, setValue] = useState('');
-  const history = useHistory();
+  const {handleNewIncident} = useContext(GlobalContext)
 
-  const ongId = localStorage.getItem('ongId');
-
-  async function handleNewIncident(e) {
-    e.preventDefault();
-
-    const data = {
-      title,
-      description,
-      value
-    }
-    try {
-      await api.post('incidents', data, {
-        headers: {
-          Authorization: ongId
-        }
-      });
-
-      history.push('/profile');
-    } catch(err) {
-      alert(err);
-    }
-  }
   return (
-    <div className="new-incident-container">
-      <div className="content">
-        <section>
+    <Container>
+      <Content>
+        <Section>
           <img src={logoImg} alt="Be The hero" />
 
-          <h1>Cadastrar novo caso</h1>
-          <p>Descreva o caso detalhadamente para encontrar um herói para resolver isso.</p>
+          <Title>Cadastrar novo caso</Title>
+          <Text>Descreva o caso detalhadamente para encontrar um herói para resolver isso.</Text>
 
-          <Link to='/profile' className='back-link'>
-						<FiArrowLeft size={16} color='E02041' />
+          <Link to='/profile'>
+						<FiArrowLeft size={16} color='#E02041' />
 						Voltar para home
 					</Link>
-        </section>
-        <form onSubmit={handleNewIncident}>
-          <input
+        </Section>
+        <Form onSubmit={handleNewIncident}>
+          <Input
             placeholder="Titulo do caso"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
+            name="title"
           />
-          <textarea
+          <TextArea
             placeholder="Descrição"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
+            name="description"
           />
-          <input
+          <Input
             placeholder="Valor em kwanzas"
-            value={value}
-            onChange={e => setValue(e.target.value)}
+            name="value"
           />
 
-          <button type="submit" className="button">Cadastrar</button>
-        </form>
-      </div>
-    </div>
+          <Button type="submit">Cadastrar</Button>
+        </Form>
+      </Content>
+    </Container>
   );
 }
